@@ -57,5 +57,74 @@ namespace WebApplicationTest.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            using(PizzeriaContext db = new PizzeriaContext())
+            {
+                Pizza pizzaToUpdate = db.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizzaToUpdate != null)
+                {
+                    return View("Update", pizzaToUpdate);
+                }
+
+                return NotFound("Something went wrong when trying to update this pizza");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(Pizza pizzaFormInfo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Update", pizzaFormInfo);
+            }
+
+            using (PizzeriaContext db = new PizzeriaContext())
+            {
+                Pizza pizzaToUpdate = db.Pizzas.Where(pizza => pizza.Id == pizzaFormInfo.Id).FirstOrDefault();
+
+                if (pizzaToUpdate != null)
+                {
+                    pizzaToUpdate.Name = pizzaFormInfo.Name;
+                    pizzaToUpdate.Description = pizzaFormInfo.Description;
+                    pizzaToUpdate.Image = pizzaFormInfo.Image;
+                    pizzaToUpdate.Price = pizzaFormInfo.Price;
+
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return NotFound("haha pizza goes brrr");
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            using(PizzeriaContext db = new PizzeriaContext())
+            {
+                Pizza pizzaToDelete = db.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizzaToDelete != null)
+                {
+                    db.Pizzas.Remove(pizzaToDelete);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return NotFound("why are we here, just to suffer");
+                }
+            }
+        }
     }
 }
