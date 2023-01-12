@@ -34,7 +34,12 @@ else{
                                 <td><img class="img-fluid img-thumbnail" src="@element.Image" alt="Immagine pizza"></td>
                                 <td>@element.Price</td>
                                 <td>
-                                    <a class="btn btn-success" href="@Url.Action("Details", "Pizza", new { id = @element.Id } )" role="button">Preview</a>
+                                    <a class="btn btn-success m-2" href="@Url.Action("Details", "Pizza", new { id = @element.Id } )" role="button">Preview</a>
+                                    <a class="btn btn-info m-2" href="@Url.Action("Update", "Pizza", new { id = @element.Id } )" role="button">Update</a>
+                                    <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@element.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger m-2">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         }
